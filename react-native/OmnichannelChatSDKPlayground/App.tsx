@@ -20,6 +20,8 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
+const { AzureLogger, setLogLevel } = require("@azure/logger");
+
 function App(): React.JSX.Element {
   const [chatSDK, setChatSDK] = useState();
 
@@ -39,6 +41,16 @@ function App(): React.JSX.Element {
   }, []);
 
   useEffect(() => {
+    const debug = () => {
+      setLogLevel("verbose");
+
+      AzureLogger.log = (...args: any[]) => {
+        console.log("[Azure][Log][Start]");
+        console.log(...args);
+        console.log("[Azure][Log][End]");
+      };
+    }
+
     const init = async () => {
       console.log("[init]");
 
@@ -55,6 +67,7 @@ function App(): React.JSX.Element {
       await chatSDK.initialize();
     }
 
+    // debug();
     init();
   }, []);
 
